@@ -1,0 +1,773 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prelim Grade Calculator - UPHSD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #800020 0%, #5a0014 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            border-top: 8px solid #FFD700;
+        }
+        
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: #800020;
+            text-align: center;
+            margin-bottom: 8px;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            color: #666;
+            margin-bottom: 35px;
+            font-size: 15px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+        
+        .school-badge {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: linear-gradient(135deg, #800020 0%, #5a0014 100%);
+            border-radius: 10px;
+            color: #FFD700;
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .input-section {
+            background: #f9f7f5;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 2px solid #f0ebe6;
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            color: #800020;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #800020;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            color: #800020;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.3px;
+        }
+        
+        .attendance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .attendance-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #e8ddd4;
+        }
+        
+        .attendance-item label {
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        .attendance-item select {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #e8ddd4;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Montserrat', sans-serif;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .attendance-item select:focus {
+            outline: none;
+            border-color: #800020;
+            box-shadow: 0 0 0 3px rgba(128, 0, 32, 0.1);
+        }
+        
+        .attendance-item select option[value="present"] {
+            color: #2d5016;
+        }
+        
+        .attendance-item select option[value="absent"] {
+            color: #800020;
+        }
+        
+        .attendance-item select option[value="excused"] {
+            color: #b8860b;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e8ddd4;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #800020;
+            box-shadow: 0 0 0 3px rgba(128, 0, 32, 0.1);
+        }
+        
+        .button {
+            background: linear-gradient(135deg, #800020 0%, #5a0014 100%);
+            color: #FFD700;
+            border: none;
+            padding: 16px 35px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(128, 0, 32, 0.3);
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(128, 0, 32, 0.4);
+            background: linear-gradient(135deg, #5a0014 0%, #800020 100%);
+        }
+        
+        .button:active {
+            transform: translateY(0);
+        }
+        
+        .results {
+            margin-top: 35px;
+            display: none;
+        }
+        
+        .results.show {
+            display: block;
+            animation: fadeIn 0.6s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result-card {
+            background: linear-gradient(to right, #faf8f6, #ffffff);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 5px solid #800020;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .result-card h3 {
+            font-family: 'Playfair Display', serif;
+            color: #800020;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0ebe6;
+        }
+        
+        .result-row:last-child {
+            border-bottom: none;
+        }
+        
+        .result-label {
+            color: #666;
+            font-weight: 500;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+        }
+        
+        .result-value {
+            color: #800020;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+        }
+        
+        .exam-requirement {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            border: 3px solid #e8ddd4;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .exam-requirement.pass {
+            border-color: #2d5016;
+            background: linear-gradient(to bottom right, #ffffff, #f0f7ed);
+        }
+        
+        .exam-requirement.excellent {
+            border-color: #b8860b;
+            background: linear-gradient(to bottom right, #ffffff, #fffef0);
+        }
+        
+        .exam-requirement h4 {
+            margin-bottom: 12px;
+            font-size: 17px;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        
+        .exam-requirement.pass h4 {
+            color: #2d5016;
+        }
+        
+        .exam-requirement.excellent h4 {
+            color: #b8860b;
+        }
+        
+        .exam-score {
+            font-size: 40px;
+            font-weight: 700;
+            color: #800020;
+            margin: 18px 0;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 1px;
+        }
+        
+        .remark {
+            background: #f5f0eb;
+            padding: 16px;
+            border-radius: 10px;
+            color: #555;
+            line-height: 1.7;
+            margin-top: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+        }
+        
+        .remark.success {
+            background: #e8f5e9;
+            color: #2d5016;
+            border-left: 4px solid #2d5016;
+        }
+        
+        .remark.warning {
+            background: #fffbf0;
+            color: #856404;
+            border-left: 4px solid #b8860b;
+        }
+        
+        .remark.danger {
+            background: #fce8e8;
+            color: #5a0014;
+            border-left: 4px solid #800020;
+        }
+        
+        .formula-box {
+            background: linear-gradient(135deg, #800020 0%, #5a0014 100%);
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin-top: 25px;
+            color: #FFD700;
+            box-shadow: 0 4px 15px rgba(128, 0, 32, 0.3);
+        }
+        
+        .formula-box h4 {
+            margin-bottom: 12px;
+            font-family: 'Playfair Display', serif;
+            color: #FFD700;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .formula-box div {
+            margin: 8px 0;
+            color: rgba(255, 215, 0, 0.95);
+            font-weight: 500;
+        }
+        
+        .status-card {
+            background: linear-gradient(to right, #faf8f6, #ffffff);
+            border-left: 5px solid #800020;
+        }
+        
+        .status-indicator {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 24px;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        
+        .status-badge.passed {
+            background: linear-gradient(135deg, #2d5016 0%, #4a7c1f 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(45, 80, 22, 0.3);
+        }
+        
+        .status-badge.failed {
+            background: linear-gradient(135deg, #800020 0%, #5a0014 100%);
+            color: #FFD700;
+            box-shadow: 0 4px 15px rgba(128, 0, 32, 0.3);
+        }
+        
+        .status-message {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            color: #555;
+            line-height: 1.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .attendance-summary {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 2px solid #e8ddd4;
+        }
+
+        .attendance-summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 13px;
+        }
+
+        .attendance-summary-item .label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .attendance-summary-item .value {
+            color: #800020;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="school-badge">
+            University of Perpetual Help System DALTA
+        </div>
+        
+        <h1>Prelim Grade Calculator</h1>
+        <p class="subtitle">Calculate your required exam score to pass or achieve excellence</p>
+        
+        <div class="input-section">
+            <div class="section-title">Weekly Attendance (5 Meetings)</div>
+            
+            <div class="attendance-grid">
+                <div class="attendance-item">
+                    <label>Week 1:</label>
+                    <select id="week1">
+                        <option value="">Select</option>
+                        <option value="present">Present</option>
+                        <option value="absent">Absent</option>
+                        <option value="excused">Excused</option>
+                    </select>
+                </div>
+                
+                <div class="attendance-item">
+                    <label>Week 2:</label>
+                    <select id="week2">
+                        <option value="">Select</option>
+                        <option value="present">Present</option>
+                        <option value="absent">Absent</option>
+                        <option value="excused">Excused</option>
+                    </select>
+                </div>
+                
+                <div class="attendance-item">
+                    <label>Week 3:</label>
+                    <select id="week3">
+                        <option value="">Select</option>
+                        <option value="present">Present</option>
+                        <option value="absent">Absent</option>
+                        <option value="excused">Excused</option>
+                    </select>
+                </div>
+                
+                <div class="attendance-item">
+                    <label>Week 4:</label>
+                    <select id="week4">
+                        <option value="">Select</option>
+                        <option value="present">Present</option>
+                        <option value="absent">Absent</option>
+                        <option value="excused">Excused</option>
+                    </select>
+                </div>
+                
+                <div class="attendance-item">
+                    <label>Week 5:</label>
+                    <select id="week5">
+                        <option value="">Select</option>
+                        <option value="present">Present</option>
+                        <option value="absent">Absent</option>
+                        <option value="excused">Excused</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="attendance-summary" id="attendanceSummary" style="display: none;">
+                <div class="attendance-summary-item">
+                    <span class="label">Present:</span>
+                    <span class="value" id="presentCount">0</span>
+                </div>
+                <div class="attendance-summary-item">
+                    <span class="label">Absent:</span>
+                    <span class="value" id="absentCount">0</span>
+                </div>
+                <div class="attendance-summary-item">
+                    <span class="label">Excused:</span>
+                    <span class="value" id="excusedCount">0</span>
+                </div>
+                <div class="attendance-summary-item">
+                    <span class="label">Attendance Score:</span>
+                    <span class="value" id="attendanceScore">0%</span>
+                </div>
+            </div>
+            
+            <div class="section-title" style="margin-top: 30px;">Lab Work Grades</div>
+            
+            <div class="form-group">
+                <label for="labWork1">Lab Work 1 Grade (0-100):</label>
+                <input type="number" id="labWork1" min="0" max="100" step="0.01" placeholder="Enter Lab Work 1 grade">
+            </div>
+            
+            <div class="form-group">
+                <label for="labWork2">Lab Work 2 Grade (0-100):</label>
+                <input type="number" id="labWork2" min="0" max="100" step="0.01" placeholder="Enter Lab Work 2 grade">
+            </div>
+            
+            <div class="form-group">
+                <label for="labWork3">Lab Work 3 Grade (0-100):</label>
+                <input type="number" id="labWork3" min="0" max="100" step="0.01" placeholder="Enter Lab Work 3 grade">
+            </div>
+            
+            <button class="button" onclick="calculateGrade()">Calculate</button>
+        </div>
+        
+        <div class="results" id="results">
+            <div class="result-card">
+                <h3>Your Input Scores</h3>
+                <div class="result-row">
+                    <span class="result-label">Attendance:</span>
+                    <span class="result-value" id="displayAttendance">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Lab Work 1:</span>
+                    <span class="result-value" id="displayLW1">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Lab Work 2:</span>
+                    <span class="result-value" id="displayLW2">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Lab Work 3:</span>
+                    <span class="result-value" id="displayLW3">-</span>
+                </div>
+            </div>
+            
+            <div class="result-card">
+                <h3>Computed Values</h3>
+                <div class="result-row">
+                    <span class="result-label">Lab Work Average:</span>
+                    <span class="result-value" id="displayLWAvg">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Class Standing:</span>
+                    <span class="result-value" id="displayCS">-</span>
+                </div>
+            </div>
+            
+            <div class="result-card status-card" id="statusCard">
+                <h3>Current Status</h3>
+                <div class="status-indicator" id="statusIndicator">
+                    <div class="status-badge" id="statusBadge">-</div>
+                    <div class="status-message" id="statusMessage">-</div>
+                </div>
+            </div>
+            
+            <div class="result-card">
+                <h3>Required Prelim Exam Scores</h3>
+                
+                <div class="exam-requirement pass">
+                    <h4>To PASS (75%)</h4>
+                    <div class="exam-score" id="examPass">-</div>
+                    <div class="remark" id="remarkPass">-</div>
+                </div>
+                
+                <div class="exam-requirement excellent">
+                    <h4>To Achieve EXCELLENT (100%)</h4>
+                    <div class="exam-score" id="examExcellent">-</div>
+                    <div class="remark" id="remarkExcellent">-</div>
+                </div>
+            </div>
+            
+            <div class="formula-box">
+                <h4>Grading Formula Breakdown</h4>
+                <div>Prelim Grade = 30% Exam + 70% Class Standing</div>
+                <div>Class Standing = 40% Attendance + 60% Lab Work Average</div>
+                <div>Lab Work Average = (LW1 + LW2 + LW3) / 3</div>
+                <div>Attendance = (Present + Excused) / Total Meetings * 100</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Constants for grading weights
+        const EXAM_WEIGHT = 0.30;
+        const CLASS_STANDING_WEIGHT = 0.70;
+        const ATTENDANCE_WEIGHT = 0.40;
+        const LAB_WORK_WEIGHT = 0.60;
+        
+        // Target grades
+        const PASSING_GRADE = 75.0;
+        const EXCELLENT_GRADE = 100.0;
+        const MAX_EXAM_SCORE = 100.0;
+        const TOTAL_MEETINGS = 5;
+
+        // Update attendance summary when selections change
+        const attendanceSelects = ['week1', 'week2', 'week3', 'week4', 'week5'];
+        attendanceSelects.forEach(id => {
+            document.getElementById(id).addEventListener('change', updateAttendanceSummary);
+        });
+
+        function updateAttendanceSummary() {
+            let present = 0;
+            let absent = 0;
+            let excused = 0;
+
+            attendanceSelects.forEach(id => {
+                const value = document.getElementById(id).value;
+                if (value === 'present') present++;
+                else if (value === 'absent') absent++;
+                else if (value === 'excused') excused++;
+            });
+
+            // Calculate attendance score: (Present + Excused) / Total * 100
+            const attendanceScore = ((present + excused) / TOTAL_MEETINGS) * 100;
+
+            // Show summary if at least one selection is made
+            if (present + absent + excused > 0) {
+                document.getElementById('attendanceSummary').style.display = 'block';
+                document.getElementById('presentCount').textContent = present;
+                document.getElementById('absentCount').textContent = absent;
+                document.getElementById('excusedCount').textContent = excused;
+                document.getElementById('attendanceScore').textContent = attendanceScore.toFixed(2) + '%';
+            } else {
+                document.getElementById('attendanceSummary').style.display = 'none';
+            }
+        }
+        
+        function calculateGrade() {
+            // Calculate attendance
+            let present = 0;
+            let excused = 0;
+            let totalSelected = 0;
+
+            attendanceSelects.forEach(id => {
+                const value = document.getElementById(id).value;
+                if (value) totalSelected++;
+                if (value === 'present') present++;
+                else if (value === 'excused') excused++;
+            });
+
+            // Validate attendance selection
+            if (totalSelected < TOTAL_MEETINGS) {
+                alert('Please select attendance status for all 5 weeks.');
+                return;
+            }
+
+            // Calculate attendance score: (Present + Excused) / Total * 100
+            const attendance = ((present + excused) / TOTAL_MEETINGS) * 100;
+
+            // Get input values
+            const labWork1 = parseFloat(document.getElementById('labWork1').value);
+            const labWork2 = parseFloat(document.getElementById('labWork2').value);
+            const labWork3 = parseFloat(document.getElementById('labWork3').value);
+            
+            // Validate inputs
+            if (isNaN(labWork1) || isNaN(labWork2) || isNaN(labWork3)) {
+                alert('Please fill in all Lab Work grades with valid numbers.');
+                return;
+            }
+            
+            if (labWork1 < 0 || labWork1 > 100 || labWork2 < 0 || labWork2 > 100 || labWork3 < 0 || labWork3 > 100) {
+                alert('All Lab Work grades must be between 0 and 100.');
+                return;
+            }
+            
+            // Calculate Lab Work Average
+            const labWorkAverage = (labWork1 + labWork2 + labWork3) / 3.0;
+            
+            // Calculate Class Standing
+            const classStanding = (ATTENDANCE_WEIGHT * attendance) + (LAB_WORK_WEIGHT * labWorkAverage);
+            
+            // Calculate required exam scores
+            const requiredExamToPass = (PASSING_GRADE - (CLASS_STANDING_WEIGHT * classStanding)) / EXAM_WEIGHT;
+            const requiredExamForExcellent = (EXCELLENT_GRADE - (CLASS_STANDING_WEIGHT * classStanding)) / EXAM_WEIGHT;
+            
+            // Display input values
+            document.getElementById('displayAttendance').textContent = attendance.toFixed(2) + '% (' + present + ' present, ' + excused + ' excused)';
+            document.getElementById('displayLW1').textContent = labWork1.toFixed(2);
+            document.getElementById('displayLW2').textContent = labWork2.toFixed(2);
+            document.getElementById('displayLW3').textContent = labWork3.toFixed(2);
+            
+            // Display computed values
+            document.getElementById('displayLWAvg').textContent = labWorkAverage.toFixed(2);
+            document.getElementById('displayCS').textContent = classStanding.toFixed(2);
+            
+            // Calculate what the prelim grade would be with 0 exam score (worst case) and 100 exam score (best case)
+            const worstCasePrelimGrade = (0 * EXAM_WEIGHT) + (classStanding * CLASS_STANDING_WEIGHT);
+            const bestCasePrelimGrade = (100 * EXAM_WEIGHT) + (classStanding * CLASS_STANDING_WEIGHT);
+            
+            // Determine current status
+            const statusBadge = document.getElementById('statusBadge');
+            const statusMessage = document.getElementById('statusMessage');
+            
+            if (worstCasePrelimGrade >= PASSING_GRADE) {
+                // Already passed even without taking the exam
+                statusBadge.textContent = 'PASSED';
+                statusBadge.className = 'status-badge passed';
+                statusMessage.textContent = `Congratulations! Your Class Standing of ${classStanding.toFixed(2)} means you have already passed the Prelim period even without taking the exam. Your minimum possible Prelim Grade is ${worstCasePrelimGrade.toFixed(2)}.`;
+            } else if (bestCasePrelimGrade >= PASSING_GRADE) {
+                // Can still pass if they do well on the exam
+                statusBadge.textContent = 'PENDING';
+                statusBadge.className = 'status-badge failed';
+                statusMessage.textContent = `Your current Class Standing is ${classStanding.toFixed(2)}. You have not yet passed the Prelim period. Your grade depends on your Prelim Exam performance. With a perfect exam score (100), your Prelim Grade would be ${bestCasePrelimGrade.toFixed(2)}.`;
+            } else {
+                // Cannot pass even with perfect exam score
+                statusBadge.textContent = 'FAILED';
+                statusBadge.className = 'status-badge failed';
+                statusMessage.textContent = `Unfortunately, your Class Standing of ${classStanding.toFixed(2)} means it is mathematically impossible to pass the Prelim period. Even with a perfect exam score (100), your maximum possible Prelim Grade would be ${bestCasePrelimGrade.toFixed(2)}, which is below the passing grade of 75.`;
+            }
+            
+            // Display required exam for passing
+            document.getElementById('examPass').textContent = requiredExamToPass.toFixed(2);
+            const remarkPassEl = document.getElementById('remarkPass');
+            
+            if (requiredExamToPass > MAX_EXAM_SCORE) {
+                remarkPassEl.textContent = 'It is IMPOSSIBLE to pass the Prelim period. Even with a perfect exam score (100), you cannot reach 75%.';
+                remarkPassEl.className = 'remark danger';
+            } else if (requiredExamToPass < 0) {
+                remarkPassEl.textContent = 'You have already PASSED the Prelim period! Your Class Standing alone is sufficient.';
+                remarkPassEl.className = 'remark success';
+            } else {
+                remarkPassEl.textContent = `You need to score at least ${requiredExamToPass.toFixed(2)} on the Prelim Exam to pass.`;
+                remarkPassEl.className = 'remark';
+            }
+            
+            // Display required exam for excellent
+            document.getElementById('examExcellent').textContent = requiredExamForExcellent.toFixed(2);
+            const remarkExcellentEl = document.getElementById('remarkExcellent');
+            
+            if (requiredExamForExcellent > MAX_EXAM_SCORE) {
+                remarkExcellentEl.textContent = 'It is IMPOSSIBLE to achieve an Excellent grade. Even with a perfect exam score (100), you cannot reach 100%.';
+                remarkExcellentEl.className = 'remark danger';
+            } else if (requiredExamForExcellent < 0) {
+                remarkExcellentEl.textContent = 'You have already achieved EXCELLENT standing! Your Class Standing alone guarantees 100%.';
+                remarkExcellentEl.className = 'remark success';
+            } else {
+                remarkExcellentEl.textContent = `You need to score at least ${requiredExamForExcellent.toFixed(2)} on the Prelim Exam for Excellent.`;
+                remarkExcellentEl.className = 'remark warning';
+            }
+            
+            // Show results section
+            document.getElementById('results').classList.add('show');
+            
+            // Scroll to results
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        // Allow Enter key to submit
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        calculateGrade();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
