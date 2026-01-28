@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance System - Lab Work 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid #c33;
+            animation: shake 0.5s;
+        }
+
+        .success-section {
+            display: none;
+            text-align: center;
+        }
+
+        .success-section.active {
+            display: block;
+        }
+
+        .welcome-message {
+            color: #28a745;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .timestamp {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .timestamp strong {
+            color: #667eea;
+        }
+
+        .attendance-info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: left;
+        }
+
+        .attendance-info p {
+            margin: 8px 0;
+            color: #333;
+        }
+
+        .download-btn {
+            background: #28a745;
+            margin-top: 20px;
+        }
+
+        .download-btn:hover {
+            box-shadow: 0 5px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .logout-btn {
+            background: #6c757d;
+            margin-top: 10px;
+        }
+
+        .logout-btn:hover {
+            box-shadow: 0 5px 20px rgba(108, 117, 125, 0.4);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .credentials-hint {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .credentials-hint strong {
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 Attendance System</h1>
+        
+        <div id="loginForm">
+            <div class="credentials-hint">
+                <strong>Demo Credentials:</strong><br>
+                Username: <code>student</code><br>
+                Password: <code>password123</code>
+            </div>
+
+            <div id="errorMessage" class="error-message"></div>
+
+            <form id="login">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                </div>
+
+                <button type="submit">Log In</button>
+            </form>
+        </div>
+
+        <div id="successSection" class="success-section">
+            <div class="welcome-message">✓ Welcome, <span id="welcomeName"></span>!</div>
+            
+            <div class="timestamp">
+                <strong>Login Time:</strong><br>
+                <span id="timestampDisplay"></span>
+            </div>
+
+            <div class="attendance-info">
+                <h3 style="margin-bottom: 10px; color: #667eea;">Attendance Summary</h3>
+                <p><strong>Username:</strong> <span id="summaryUsername"></span></p>
+                <p><strong>Date:</strong> <span id="summaryDate"></span></p>
+                <p><strong>Time:</strong> <span id="summaryTime"></span></p>
+                <p><strong>Status:</strong> <span style="color: #28a745;">Present</span></p>
+            </div>
+
+            <button class="download-btn" onclick="downloadAttendance()">
+                📥 Download Attendance Summary
+            </button>
+
+            <button class="logout-btn" onclick="logout()">
+                🚪 Log Out
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Predefined credentials
+        const validUsername = 'student';
+        const validPassword = 'password123';
+
+        // Store attendance data
+        let attendanceData = {
+            username: '',
+            timestamp: '',
+            date: '',
+            time: ''
+        };
+
+        // Create beep sound using Web Audio API
+        function playBeep() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        // Format date and time
+        function formatDateTime() {
+            const now = new Date();
+            
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const year = now.getFullYear();
+            
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            return {
+                full: `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`,
+                date: `${month}/${day}/${year}`,
+                time: `${hours}:${minutes}:${seconds}`
+            };
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            playBeep();
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Handle login
+        document.getElementById('login').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (username === validUsername && password === validPassword) {
+                // Successful login
+                const dateTime = formatDateTime();
+                
+                attendanceData = {
+                    username: username,
+                    timestamp: dateTime.full,
+                    date: dateTime.date,
+                    time: dateTime.time
+                };
+                
+                // Update UI
+                document.getElementById('welcomeName').textContent = username;
+                document.getElementById('timestampDisplay').textContent = dateTime.full;
+                document.getElementById('summaryUsername').textContent = username;
+                document.getElementById('summaryDate').textContent = dateTime.date;
+                document.getElementById('summaryTime').textContent = dateTime.time;
+                
+                // Show success section, hide login form
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('successSection').classList.add('active');
+                
+            } else {
+                // Failed login
+                if (username !== validUsername && password !== validPassword) {
+                    showError('❌ Invalid username and password!');
+                } else if (username !== validUsername) {
+                    showError('❌ Invalid username!');
+                } else {
+                    showError('❌ Incorrect password!');
+                }
+                
+                // Clear password field
+                document.getElementById('password').value = '';
+            }
+        });
+
+        // Download attendance summary
+        function downloadAttendance() {
+            const attendanceText = `
+ATTENDANCE SUMMARY
+==================
+
+Username: ${attendanceData.username}
+Date: ${attendanceData.date}
+Time: ${attendanceData.time}
+Full Timestamp: ${attendanceData.timestamp}
+Status: Present
+
+==================
+Generated by Attendance System
+Lab Work 2 - JavaScript Implementation
+            `.trim();
+
+            const blob = new Blob([attendanceText], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = `attendance_${attendanceData.username}_${attendanceData.date.replace(/\//g, '-')}.txt`;
+            link.click();
+            
+            window.URL.revokeObjectURL(link.href);
+        }
+
+        // Logout function
+        function logout() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('successSection').classList.remove('active');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            
+            attendanceData = {
+                username: '',
+                timestamp: '',
+                date: '',
+                time: ''
+            };
+        }
+    </script>
+</body>
+</html>
