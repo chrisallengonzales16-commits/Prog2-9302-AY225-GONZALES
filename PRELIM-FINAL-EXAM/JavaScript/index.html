@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Record System - UPHSD Molino</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="brand">
+                <div class="logo-badge" aria-hidden="true">U</div>
+                <div>
+                    <h1 class="title">STUDENT RECORD MANAGEMENT SYSTEM</h1>
+                    <p class="subtitle">University of Perpetual Help System DALTA - Molino Campus</p>
+                </div>
+            </div>
+            <div class="stats">
+                <span id="recordCount">Total Records: 0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Table Container -->
+        <div class="table-container">
+            <div class="table-wrapper">
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search by ID or name..." oninput="filterStudents(this.value)">
+                </div>
+                <table id="studentTable">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>LAB WORK 1</th>
+                            <th>LAB WORK 2</th>
+                            <th>LAB WORK 3</th>
+                            <th>PRELIM EXAM</th>
+                            <th>ATTENDANCE GRADE</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Input Form -->
+        <div class="input-panel">
+            <div class="form-container">
+                <h3 class="form-title">Add New Record</h3>
+                
+                <!-- Row 1: Student Information -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="studentId">Student ID:</label>
+                        <input type="text" id="studentId" placeholder="Enter Student ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="firstName">First Name:</label>
+                        <input type="text" id="firstName" placeholder="Enter First Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name:</label>
+                        <input type="text" id="lastName" placeholder="Enter Last Name">
+                    </div>
+                </div>
+
+                <!-- Row 2: Lab Works -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="lab1">LAB WORK 1:</label>
+                        <input type="number" id="lab1" min="0" max="100" placeholder="0-100">
+                    </div>
+                    <div class="form-group">
+                        <label for="lab2">LAB WORK 2:</label>
+                        <input type="number" id="lab2" min="0" max="100" placeholder="0-100">
+                    </div>
+                    <div class="form-group">
+                        <label for="lab3">LAB WORK 3:</label>
+                        <input type="number" id="lab3" min="0" max="100" placeholder="0-100">
+                    </div>
+                </div>
+
+                <!-- Row 3: Exam and Attendance -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="exam">PRELIM EXAM:</label>
+                        <input type="number" id="exam" min="0" max="100" placeholder="0-100">
+                    </div>
+                    <div class="form-group">
+                        <label for="attendance">ATTENDANCE:</label>
+                        <input type="number" id="attendance" min="0" max="100" placeholder="0-100">
+                    </div>
+                    <div class="form-group"></div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="button-group">
+                    <button class="btn btn-clear" onclick="clearFields()">
+                        <span>↺</span> Clear Fields
+                    </button>
+                    <button class="btn btn-add" onclick="addRecord()">
+                        <span>➕</span> Add Record
+                    </button>
+                    <button class="btn btn-delete-selected" onclick="deleteSelectedRecord()">
+                        <span>🗑️</span> Delete Selected
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Programmer Identifier: Chris Allen S Gonzales — 23-0179-685</p>
+        <p>© 2026 University of Perpetual Help System DALTA - Molino Campus</p>
+    </footer>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Student Record</h2>
+                <span class="close" onclick="closeEditModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editIndex">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editStudentId">Student ID:</label>
+                        <input type="text" id="editStudentId" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFirstName">First Name:</label>
+                        <input type="text" id="editFirstName">
+                    </div>
+                    <div class="form-group">
+                        <label for="editLastName">Last Name:</label>
+                        <input type="text" id="editLastName">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editLab1">LAB WORK 1:</label>
+                        <input type="number" id="editLab1" min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="editLab2">LAB WORK 2:</label>
+                        <input type="number" id="editLab2" min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="editLab3">LAB WORK 3:</label>
+                        <input type="number" id="editLab3" min="0" max="100">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editExam">PRELIM EXAM:</label>
+                        <input type="number" id="editExam" min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="editAttendance">ATTENDANCE:</label>
+                        <input type="number" id="editAttendance" min="0" max="100">
+                    </div>
+                    <div class="form-group"></div>
+                </div>
+
+                <div class="modal-buttons">
+                    <button class="btn btn-cancel" onclick="closeEditModal()">Cancel</button>
+                    <button class="btn btn-save" onclick="saveEdit()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
